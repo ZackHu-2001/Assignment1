@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import CheckBox from 'expo-checkbox';
 
-const StartScreen = () => {
+const StartScreen = ({ startGameHandler }) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [isChecked, setIsChecked] = useState(false);
     const [nameError, setNameError] = useState('');
     const [emailError, setEmailError] = useState('');
 
+    // name should be longer than 2 characters and should not contain numbers
     const validateName = (text) => {
         if (text.length < 2 || /\d/.test(text)) {
             setNameError('Invalid Name');
@@ -18,6 +19,7 @@ const StartScreen = () => {
         setName(text);
     };
 
+    // email should be in the correct format
     const validateEmail = (text) => {
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailPattern.test(text)) {
@@ -70,7 +72,9 @@ const StartScreen = () => {
                     <Button title='Reset' onPress={handleReset} />
                     <Button
                         title='Start'
-                        onPress={() => { }}
+                        onPress={() => {
+                            startGameHandler(name, email);
+                        }}
                         disabled={!isChecked || nameError || emailError || !name || !email}
                     />
                 </View>
@@ -117,16 +121,9 @@ const styles = StyleSheet.create({
         width: '100%',
         marginBottom: 10,
     },
-    underline: {
-        height: 2,
-        backgroundColor: 'purple', // The color of the underline
-        marginTop: 10,
-    },
     errorText: {
         color: 'red',
-        
         marginBottom: 15,
-        // marginTop: -15,
     },
     checkboxContainer: {
         flexDirection: 'row',

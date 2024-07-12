@@ -1,33 +1,42 @@
+// Import necessary modules and components from React and React Native
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import CheckBox from 'expo-checkbox';
+import CheckBox from 'expo-checkbox'; // Import the CheckBox component from Expo
+import CardComponent from '../components/CardComponent'; // Import a custom CardComponent
+import colors from '../utils/colors'; // Import a utility file for color values
 
-const StartScreen = () => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [isChecked, setIsChecked] = useState(false);
-    const [nameError, setNameError] = useState('');
-    const [emailError, setEmailError] = useState('');
+// Define the StartScreen component
+const StartScreen = ({ startGameHandler }) => {
+    const [name, setName] = useState(''); // State to store the user's name
+    const [email, setEmail] = useState(''); // State to store the user's email
+    const [isChecked, setIsChecked] = useState(false); // State to store the checkbox value
+    const [nameError, setNameError] = useState(''); // State to store the name validation error
+    const [emailError, setEmailError] = useState(''); // State to store the email validation error
 
+    // Validate the name input
+    // Name should be longer than 2 characters and should not contain numbers
     const validateName = (text) => {
         if (text.length < 2 || /\d/.test(text)) {
-            setNameError('Invalid Name');
+            setNameError('Invalid Name'); // Set error message if validation fails
         } else {
-            setNameError('');
+            setNameError(''); // Clear error message if validation passes
         }
-        setName(text);
+        setName(text); // Update the name state
     };
 
+    // Validate the email input
+    // Email should be in the correct format
     const validateEmail = (text) => {
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailPattern.test(text)) {
-            setEmailError('Invalid Email');
+            setEmailError('Invalid Email'); // Set error message if validation fails
         } else {
-            setEmailError('');
+            setEmailError(''); // Clear error message if validation passes
         }
-        setEmail(text);
+        setEmail(text); // Update the email state
     };
 
+    // Reset all input fields and error messages
     const handleReset = () => {
         setName('');
         setEmail('');
@@ -39,7 +48,7 @@ const StartScreen = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Welcome</Text>
-            <View style={styles.card}>
+            <CardComponent style={{ alignItems: 'start' }}>
                 <Text style={styles.text}>Name</Text>
                 <TextInput
                     style={styles.input}
@@ -70,15 +79,18 @@ const StartScreen = () => {
                     <Button title='Reset' onPress={handleReset} />
                     <Button
                         title='Start'
-                        onPress={() => { }}
-                        disabled={!isChecked || nameError || emailError || !name || !email}
+                        onPress={() => {
+                            startGameHandler(name, email); // Call startGameHandler with name and email
+                        }}
+                        disabled={!isChecked || nameError || emailError || !name || !email} // Disable button if conditions are not met
                     />
                 </View>
-            </View>
-        </View>
+            </CardComponent >
+        </View >
     );
 }
 
+// Define styles for the StartScreen component
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -93,12 +105,12 @@ const styles = StyleSheet.create({
     card: {
         padding: 20,
         borderRadius: 10,
-        shadowColor: '#000',
+        shadowColor: colors.black,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
         shadowRadius: 2,
         elevation: 1,
-        backgroundColor: '#fff',
+        backgroundColor: colors.white,
         width: '80%',
         alignItems: 'start',
     },
@@ -109,7 +121,7 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 1,
-        borderColor: '#ccc',
+        borderColor: colors.border,
         padding: 10,
         borderWidth: 0,
         borderBottomWidth: 2,
@@ -117,16 +129,9 @@ const styles = StyleSheet.create({
         width: '100%',
         marginBottom: 10,
     },
-    underline: {
-        height: 2,
-        backgroundColor: 'purple', // The color of the underline
-        marginTop: 10,
-    },
     errorText: {
         color: 'red',
-        
         marginBottom: 15,
-        // marginTop: -15,
     },
     checkboxContainer: {
         flexDirection: 'row',

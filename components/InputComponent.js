@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 import { TextInput, StyleSheet } from 'react-native';
-import colors
- from '../utils/colors';
+import colors from '../utils/colors';
+
 const InputComponent = forwardRef(({ value, onChangeText }, ref) => {
     return (
         <TextInput

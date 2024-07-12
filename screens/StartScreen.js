@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import CheckBox from 'expo-checkbox';
+import CardComponent from '../components/CardComponent';
 
 const StartScreen = ({ startGameHandler }) => {
     const [name, setName] = useState('');
@@ -39,9 +40,10 @@ const StartScreen = ({ startGameHandler }) => {
     };
 
     return (
+
         <View style={styles.container}>
             <Text style={styles.title}>Welcome</Text>
-            <View style={styles.card}>
+            <CardComponent style={{alignItems: 'start'}}>
                 <Text style={styles.text}>Name</Text>
                 <TextInput
                     style={styles.input}
@@ -78,8 +80,8 @@ const StartScreen = ({ startGameHandler }) => {
                         disabled={!isChecked || nameError || emailError || !name || !email}
                     />
                 </View>
-            </View>
-        </View>
+            </CardComponent >
+        </View >
     );
 }
 

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import StartScreen from './screens/StartScreen';
 import GameScreen from './screens/GameScreen';
 import ConfirmScreen from './screens/ConfirmScreen';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function App() {
   const [gameState, setGameState] = useState('LOGIN');
@@ -26,31 +27,22 @@ export default function App() {
     setIsModalVisible(false);
   };
 
-
-  const gameOverHandler = () => {
-    //   setGameState('CONFIRM');
-  };
-
-  const confirmHandler = () => {
-    // setGameState('GAME_OVER');
-  };
-
-  const cancelHandler = () => {
-    // setGameState('HOME');
-  };
-
   const restartGameHandler = () => {
-    // setGameState('HOME');
+    setGameState('LOGIN');
+    setIsModalVisible(false);
+    setName('');
+    setEmail('');
   };
-
 
   return (
-    <View style={styles.screen}>
-      <GameScreen />
-      {/* <ConfirmScreen name={name} email={email}
-      handleModalConfirm={handleModalConfirm} handleModalCancel={handleModalCancel} visible={isModalVisible}/>
-      {gameState === "LOGIN" ? <StartScreen startGameHandler={startGameHandler} /> : <GameScreen />} */}
-    </View>
+    <LinearGradient
+      colors={['#4c669f', '#3b5998', '#192f6a']}
+      style={styles.screen}
+    >
+      <ConfirmScreen name={name} email={email}
+        handleModalConfirm={handleModalConfirm} handleModalCancel={handleModalCancel} visible={isModalVisible} />
+      {gameState === "LOGIN" ? <StartScreen startGameHandler={startGameHandler} /> : <GameScreen restartGameHandler={restartGameHandler} />}
+    </LinearGradient>
   );
 }
 

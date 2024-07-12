@@ -1,91 +1,142 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TextInput, StyleSheet, Image } from 'react-native';
-import { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, StyleSheet, Image, Alert } from 'react-native';
+import CardComponent from '../components/CardComponent';
+import InputComponent from '../components/InputComponent';
+import ButtonComponent from '../components/ButtonComponent';
 
-const GameScreen = ({ randomNumber, onGameOver }) => {
+const config = {
+    time: 60,
+    attempts: 5,
+}
+
+const GameScreen = ({ restartGameHandler }) => {
+    const [randomNumber, setRandomNumber] = useState(null);
     const [guess, setGuess] = useState('');
-    const [feedback, setFeedback] = useState('');
-    const [attempt, setAttempt] = useState(5);
-    const [time, setTime] = useState(0);
+    const [attempts, setAttempts] = useState(config.attempts);
+    const [time, setTime] = useState(config.time);
+    const [hintUsed, setHintUsed] = useState(false);
     const [guessed, setGuessed] = useState(false);
-    const [guessCorrect, setGuessCorrect] = useState(null);
+    const [guessedCorrectly, setGuessedCorrectly] = useState(false);
+    const [gameOverReason, setGameOverReason] = useState('');
+    const inputRef = useRef(null);
 
-    const useHint = () => {
+    useEffect(() => {
+        initGameState();
+        const interval = setInterval(() => {
+            setTime(prevTime => prevTime - 1);
+        }, 1000);
 
-    };
+        return () => clearInterval(interval);
+    }, []);
 
-    const tryAgain = () => {
+    useEffect(() => {
+        if (time === 0) {
+            setGameOverReason('out of time');
+        }
+    }, [time])
 
-    };
 
-    const endTheGame = () => {
-
+    const initGameState = () => {
+        const num = Math.floor(Math.random() * 100) + 1;
+        setRandomNumber(num);
+        setGuess('');
+        setGuessed(false);
+        setAttempts(config.attempts);
+        setTime(config.time);
+        setHintUsed(false);
+        setGuessedCorrectly(false);
+        setGameOverReason('');
     };
 
     const handleGuess = () => {
         const userGuess = parseInt(guess);
-        if (userGuess > randomNumber) {
-            setFeedback('Too high!');
-        } else if (userGuess < randomNumber) {
-            setFeedback('Too low!');
-        } else {
-            setFeedback('Correct!');
-            onGameOver();
+        if (isNaN(userGuess) || userGuess < 1 || userGuess > 100) {
+            Alert.alert('Invalid input', 'Please enter a number between 1 and 100.');
+            return;
         }
+
+        inputRef.current.blur(); // Blur the input field to hide the keyboard
+        setGuessed(true);
         setGuess('');
+
+        if (userGuess === randomNumber) {
+            setGuessedCorrectly(true);
+        } else {
+            if (attempts === 1) {
+                setGameOverReason('out of attempts');
+            }
+            setAttempts(prevAttempts => prevAttempts - 1);
+        }
     };
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setTime((time) => time + 1);
-        }, 1000);
+    const useHint = () => {
+        setHintUsed(true);
+    };
 
-        return () => {
-            clearInterval(interval);
-        };
-    }, []);
+    const tryAgain = () => {
+        setGuessed(false);
+    };
+
+    const endTheGame = () => {
+        setGameOverReason('ended');
+    };
+
+    const newGame = () => {
+        initGameState();
+    };
+
+    const RestartGame = () => {
+        initGameState();
+        restartGameHandler();
+    };
 
     return (
-        <>
-            <Button title="Restart" onPress={tryAgain} />
-            {
-                guessed ? (
-                    guessCorrect ? (
+        <View style={styles.screen}>
+            <ButtonComponent title="Restart" onPress={RestartGame} />
+            <CardComponent>
+                {randomNumber && <Text>Random Number: {randomNumber}</Text>}
+                {gameOverReason ? (
+                    <>
+                        <Text style={styles.message}>The game is over!</Text>
+                        <Image style={styles.image} source={require('../assets/image.png')} />
+                        {gameOverReason === 'ended' ? null :
+                            <Text>You are {gameOverReason === 'out of time' ? 'out of time' : 'out of attempts'}.</Text>}
+                    </>
+                ) : <>
+                    {guessed ? <>
+                        {guessedCorrectly ? (
+                            <>
+                                <Text style={styles.message}>You guessed correct!</Text>
+                                <Text>Attempts used: {config.attempts - attempts}</Text>
+                                <Image
+                                    style={styles.image}
+                                    source={{ uri: `https://picsum.photos/id/${randomNumber}/100/100` }}
+                                />
+                                <ButtonComponent title="New Game" onPress={newGame} />
+                            </>
+                        ) : (
+                            <>
+                                <Text style={styles.message}>You did not guess correct!</Text>
+                                <ButtonComponent title="Try Again" onPress={tryAgain} />
+                                <ButtonComponent title="End The Game" onPress={endTheGame} />
+                            </>
+                        )}
+                    </> :
                         <>
-                            <Text>You guessed correct!</Text>
-                            <Text>Attempts used: {attempt}</Text>
-                            <Image></Image>
-                            <Button title="Play Again" onPress={tryAgain} />
+                            <Text style={styles.message}>Guess A Number Between 1 & 100</Text>
+                            <Text>Attempts left: {attempts}</Text>
+                            <Text>Timer: {time}s</Text>
+                            <InputComponent ref={inputRef} value={guess} onChangeText={setGuess} />
+                            <ButtonComponent title="Use a hint" onPress={useHint} disabled={hintUsed} />
+                            {hintUsed && <Text>{randomNumber > 50 ? 'The number is greater than 50' : 'The number is 50 or less'}</Text>}
+                            <ButtonComponent title="Submit guess" onPress={handleGuess} />
                         </>
-                    ) : (
-                        <>
-                            <Text>You did not guess correct!</Text>
-                            <Button title="Try Again" onPress={tryAgain} />
-                            <Button title="End The Game" onPress={endTheGame} />
-                        </>
-                    )
-                ) : <View style={styles.screen}>
-                    <Text style={styles.title}>Guess A Number Between 1 & 100</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Enter your guess"
-                        keyboardType="numeric"
-                        value={guess}
-                        onChangeText={setGuess}
-                    />
+                    }
+                </>
 
-                    <Text style={styles.title}>Attempts Left: {attempt}</Text>
-                    <Text style={styles.title}>Time: {time}</Text>
-
-                    <Button title={"USE A HINT"} onPress={useHint} />
-                    <Button title="Submit Guess" onPress={handleGuess} />
-
-                    {feedback ? <Text style={styles.feedback}>{feedback}</Text> : null}
-                </View>
-            }
-
-
-        </>
+                }
+            </CardComponent>
+        </View>
     );
 };
 
@@ -95,23 +146,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    title: {
-        fontSize: 20,
-        marginBottom: 20,
-    },
-    input: {
-        width: '40%',
-        borderWidth: 0,
-        borderBottomWidth: 2,
-        borderColor: 'purple',
-        padding: 10,
-        marginBottom: 20,
-        textAlign: 'center',
-    },
-    feedback: {
-        marginTop: 20,
+    message: {
         fontSize: 18,
-        color: 'red',
+        marginBottom: 10,
+    },
+    image: {
+        width: 100,
+        height: 100,
+        marginTop: 20,
+        marginBottom: 20,
     },
 });
 

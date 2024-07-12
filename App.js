@@ -4,6 +4,7 @@ import StartScreen from './screens/StartScreen';
 import GameScreen from './screens/GameScreen';
 import ConfirmScreen from './screens/ConfirmScreen';
 import { LinearGradient } from 'expo-linear-gradient';
+import colors from './utils/colors';
 
 export default function App() {
   const [gameState, setGameState] = useState('LOGIN');
@@ -36,7 +37,7 @@ export default function App() {
 
   return (
     <LinearGradient
-      colors={['#4c669f', '#3b5998', '#192f6a']}
+      colors={colors.backgroundGradient}
       style={styles.screen}
     >
       <ConfirmScreen name={name} email={email}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import CheckBox from 'expo-checkbox';
 import CardComponent from '../components/CardComponent';
+import colors from '../utils/colors';
 
 const StartScreen = ({ startGameHandler }) => {
     const [name, setName] = useState('');
@@ -99,12 +100,12 @@ const styles = StyleSheet.create({
     card: {
         padding: 20,
         borderRadius: 10,
-        shadowColor: '#000',
+        shadowColor: colors.black,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
         shadowRadius: 2,
         elevation: 1,
-        backgroundColor: '#fff',
+        backgroundColor: colors.white,
         width: '80%',
         alignItems: 'start',
     },
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 1,
-        borderColor: '#ccc',
+        borderColor: colors.border,
         padding: 10,
         borderWidth: 0,
         borderBottomWidth: 2,

@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 import { TextInput, StyleSheet } from 'react-native';
-
+import colors
+ from '../utils/colors';
 const InputComponent = forwardRef(({ value, onChangeText }, ref) => {
     return (
         <TextInput
@@ -18,7 +19,7 @@ const styles = StyleSheet.create({
     input: {
         width: '100%',
         borderBottomWidth: 1,
-        borderColor: '#000',
+        borderColor: colors.black,
         padding: 10,
         marginBottom: 10,
         textAlign: 'center',

@@ -1,10 +1,13 @@
+// Import necessary modules and components from React and React Native
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Modal, StyleSheet, TouchableOpacity } from 'react-native';
+import colors from '../utils/colors';
 
+// Define the ConfirmScreen component which displays a modal for confirming user details
 const ConfirmScreen = ({ name, email, visible, handleModalConfirm, handleModalCancel }) => {
 
-
     return (
+        // Modal component to display the confirmation screen
         <Modal
             visible={visible}
             transparent={true}
@@ -17,9 +20,11 @@ const ConfirmScreen = ({ name, email, visible, handleModalConfirm, handleModalCa
                     <Text style={styles.modalText}>If it is not correct, please go back and enter again.</Text>
 
                     <View style={styles.modalButtons}>
+                        {/* Button to cancel and go back */}
                         <TouchableOpacity style={styles.goBackButton} onPress={handleModalCancel}>
                             <Text style={styles.buttonText}>GO BACK</Text>
                         </TouchableOpacity>
+                        {/* Button to confirm and continue */}
                         <TouchableOpacity style={styles.continueButton} onPress={handleModalConfirm}>
                             <Text style={styles.buttonText}>CONTINUE</Text>
                         </TouchableOpacity>
@@ -30,12 +35,8 @@ const ConfirmScreen = ({ name, email, visible, handleModalConfirm, handleModalCa
     );
 };
 
+// Define styles for the ConfirmScreen component
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#A9A9A9',
-        padding: 20,
-    },
     label: {
         color: 'purple',
         marginBottom: 5,
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         width: '80%',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: colors.white,
         padding: 20,
         borderRadius: 10,
         alignItems: 'start',

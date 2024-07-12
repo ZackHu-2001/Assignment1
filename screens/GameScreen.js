@@ -94,7 +94,8 @@ const GameScreen = ({ restartGameHandler }) => {
         <View style={styles.screen}>
             <ButtonComponent title="Restart" onPress={RestartGame} />
             <CardComponent>
-                {randomNumber && <Text>Random Number: {randomNumber}</Text>}
+                {/* uncomment this line to show the answer */}
+                {/* {randomNumber && <Text>Random Number: {randomNumber}</Text>} */}
                 {gameOverReason ? (
                     <>
                         <Text style={styles.message}>The game is over!</Text>

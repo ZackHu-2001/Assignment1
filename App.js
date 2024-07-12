@@ -5,7 +5,6 @@ import GameScreen from './screens/GameScreen';
 import ConfirmScreen from './screens/ConfirmScreen';
 
 export default function App() {
-  const [randomNumber, setRandomNumber] = useState(null);
   const [gameState, setGameState] = useState('LOGIN');
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -15,7 +14,6 @@ export default function App() {
   const startGameHandler = (name, email) => {
     setName(name);
     setEmail(email);
-    setRandomNumber(Math.floor(Math.random() * 100) + 1);
     setIsModalVisible(true);
   };
 
